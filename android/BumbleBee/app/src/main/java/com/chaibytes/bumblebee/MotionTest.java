@@ -113,7 +113,7 @@ public class MotionTest extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_layout_1);
         if (initialize()) {
             mBtn_start.setEnabled(true);
             mSpin.setClickable(true);
