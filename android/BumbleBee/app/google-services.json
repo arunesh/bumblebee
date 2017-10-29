@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "31136149458",
+    "firebase_url": "https://bumblebee-backend.firebaseio.com",
+    "project_id": "bumblebee-backend",
+    "storage_bucket": "bumblebee-backend.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31136149458:android:b8ab1e2df15e1895",
+        "android_client_info": {
+          "package_name": "com.chaibytes.bumblebee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "31136149458-f1ksm2g5d4s4l337u2cu4jno0l6ft9ma.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chaibytes.bumblebee",
+            "certificate_hash": "3dbdfaa1db1a224a62600bc1b29943a72049f9f2"
+          }
+        },
+        {
+          "client_id": "31136149458-jqfh1jfv7ou1ir0thnhm6pnqoor3nr6c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH8WukeLC1DARlRpgrludUjrdIF7M3Z_Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "31136149458-jqfh1jfv7ou1ir0thnhm6pnqoor3nr6c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
