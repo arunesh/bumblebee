@@ -3,3 +3,4 @@ android/gen/*
 android/gradle/*
 android/build/*
 android/local.properties
+android/.gradle/*
