@@ -1,6 +1,7 @@
 
 package com.chaibytes.bumblebee;
 
+import com.chaibytes.bumblebee.data.MotionData;
 import com.chaibytes.bumblebee.detector.MotionDetector;
 import com.samsung.android.sdk.motion.Smotion;
 import com.samsung.android.sdk.motion.SmotionPedometer;
@@ -173,7 +174,8 @@ class MotionPedometer {
 
         if (str != null) {
             //Update the state to MotionDetector class
-            MotionDetector.updateData(sb, terseResult);
+            MotionData md = new MotionData(timestamp, calorie, distance, speed, runCount, walkCount);
+            MotionDetector.updateData(terseResult, md);
 
             MotionTest.displayData(timestamp, str, sb.toString());
         }
