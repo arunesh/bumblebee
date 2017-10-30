@@ -1,6 +1,7 @@
 
 package com.chaibytes.bumblebee;
 
+import com.chaibytes.bumblebee.detector.MotionDetector;
 import com.samsung.android.sdk.motion.Smotion;
 import com.samsung.android.sdk.motion.SmotionPedometer;
 import com.samsung.android.sdk.motion.SmotionPedometer.Info;
@@ -153,11 +154,16 @@ class MotionPedometer {
         sb.append(sResults[3] + " : " + totalCount + "\n");
         sb.append(sResults[4] + " : " + runCount + "\n");
         sb.append(sResults[5] + " : " + walkCount + "\n");
+
+        String terseResult = String.format("Cal(%2.2f), D(%2.2f), SP(%2.2f), TOT(%d), RC(%d), WC(%d)",  calorie, distance, speed, totalCount,
+                runCount, walkCount);
+
         if (mIsUpDownAvailable) {
             sb.append(sResults[6] + " : " + runUpCount + "\n");
             sb.append(sResults[7] + " : " + runDownCount + "\n");
             sb.append(sResults[8] + " : " + walkUpCount + "\n");
             sb.append(sResults[9] + " : " + walkDownCount + "\n");
+            terseResult += String.format(" RUP(%d), RDN(%d), WUP(%d), WDN(%d)", runUpCount, runDownCount, walkUpCount, walkDownCount);
         }
         if (mMode == MotionTest.MODE_PEDOMETER_PERIODIC
                 || MotionTest.mTestMode == MotionTest.MODE_PEDOMETER_PERIODIC) {
@@ -166,6 +172,9 @@ class MotionPedometer {
         String str = getStatus(info.getStatus());
 
         if (str != null) {
+            //Update the state to MotionDetector class
+            MotionDetector.updateData(sb, terseResult);
+
             MotionTest.displayData(timestamp, str, sb.toString());
         }
     }
