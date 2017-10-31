@@ -23,4 +23,8 @@ public class MotionData {
         this.walkCount = walkCount;
     }
 
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
 }

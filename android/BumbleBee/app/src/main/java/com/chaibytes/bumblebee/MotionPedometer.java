@@ -11,6 +11,7 @@ import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Looper;
 
+import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -174,7 +175,9 @@ class MotionPedometer {
 
         if (str != null) {
             //Update the state to MotionDetector class
-            MotionData md = new MotionData(timestamp, calorie, distance, speed, runCount, walkCount);
+            DecimalFormat df = new DecimalFormat("#.##");
+            MotionData md = new MotionData(timestamp, Double.valueOf(df.format(calorie)),
+                    Double.valueOf(df.format(distance)), speed, runCount, walkCount);
             MotionDetector.updateData(terseResult, md);
 
             MotionTest.displayData(timestamp, str, sb.toString());
