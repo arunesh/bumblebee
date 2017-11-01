@@ -38,6 +38,8 @@ import java.util.Formatter;
 
 public class MotionTest extends Activity {
 
+    private static final String TAG = MotionTest.class.getSimpleName();
+
     static final int MODE_CALL = 0;
 
     static final int MODE_PEDOMETER = 1;
@@ -260,7 +262,7 @@ public class MotionTest extends Activity {
                                 boolean isPedometerUpDownAvailable = mMotion
                                         .isFeatureEnabled(Smotion.TYPE_PEDOMETER_WITH_UPDOWN_STEP);
                                 mPedometer = new MotionPedometer(Looper.getMainLooper(), mMotion,
-                                        isPedometerUpDownAvailable);
+                                        isPedometerUpDownAvailable, getBaseContext());
                             }
                             mPedometer.initialize();
                         }

@@ -1,21 +1,26 @@
 package com.chaibytes.bumblebee.data;
 
+import java.text.DateFormat;
+
 /**
  * Data for user's Motion
  */
 
 public class MotionData {
-    long timeStamp;
-    double calorie;
-    double distance;
-    double speed;
-    long runCount;
-    long walkCount;
+    private long timeStamp;
+    private double calorie;
+    private double distance;
+    private double speed;
+    private long runCount;
+    private long walkCount;
+
+    private String dateFormatted;
 
     public MotionData(long timeStamp, double calorie, double distance, double speed, long runCount,
                long walkCount) {
 
         this.timeStamp = timeStamp;
+        dateFormatted = DateFormat.getDateTimeInstance().format(timeStamp);
         this.calorie = calorie;
         this.distance = distance;
         this.speed = speed;
@@ -25,6 +30,10 @@ public class MotionData {
 
     public long getTimeStamp() {
         return timeStamp;
+    }
+
+    public String getDateFormatted() {
+        return dateFormatted;
     }
 
 }

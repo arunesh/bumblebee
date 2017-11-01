@@ -1,5 +1,7 @@
 package com.chaibytes.bumblebee.backend;
 
+import android.content.Context;
+
 import com.chaibytes.bumblebee.data.MotionData;
 
 /**
@@ -8,5 +10,5 @@ import com.chaibytes.bumblebee.data.MotionData;
 
 public interface Backend {
     // Save data
-    void saveData(MotionData motionData);
+    void saveData(MotionData motionData, Context context);
 }

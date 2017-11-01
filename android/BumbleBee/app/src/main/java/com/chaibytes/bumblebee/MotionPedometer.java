@@ -3,11 +3,13 @@ package com.chaibytes.bumblebee;
 
 import com.chaibytes.bumblebee.data.MotionData;
 import com.chaibytes.bumblebee.detector.MotionDetector;
+import com.chaibytes.bumblebee.location.LocationTracker;
 import com.samsung.android.sdk.motion.Smotion;
 import com.samsung.android.sdk.motion.SmotionPedometer;
 import com.samsung.android.sdk.motion.SmotionPedometer.Info;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -24,6 +26,8 @@ class MotionPedometer {
             "Run Up Count", "Run Down Count", "Walk Up Count", "Walk Down Count"
     };
 
+    private Context mContext;
+
     private int mMode = MotionTest.MODE_PEDOMETER;
 
     private Timer mTimer;
@@ -34,9 +38,11 @@ class MotionPedometer {
 
     private boolean mIsUpDownAvailable;
 
-    MotionPedometer(Looper looper, Smotion motion, boolean isUpDownAvailable) {
+    MotionPedometer(Looper looper, Smotion motion, boolean isUpDownAvailable, Context context) {
         mPedometer = new SmotionPedometer(looper, motion);
         mIsUpDownAvailable = isUpDownAvailable;
+        mContext = context;
+
         initialize();
     }
 
@@ -178,7 +184,7 @@ class MotionPedometer {
             DecimalFormat df = new DecimalFormat("#.##");
             MotionData md = new MotionData(timestamp, Double.valueOf(df.format(calorie)),
                     Double.valueOf(df.format(distance)), speed, runCount, walkCount);
-            MotionDetector.updateData(terseResult, md);
+            MotionDetector.updateData(terseResult, md, mContext);
 
             MotionTest.displayData(timestamp, str, sb.toString());
         }

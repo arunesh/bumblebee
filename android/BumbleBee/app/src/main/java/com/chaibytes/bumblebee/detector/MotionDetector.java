@@ -1,5 +1,6 @@
 package com.chaibytes.bumblebee.detector;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.chaibytes.bumblebee.backend.Backend;
@@ -15,10 +16,10 @@ public class MotionDetector {
     private static final String TAG = MotionDetector.class.getSimpleName();
     private static Backend backendCloudFirestore = new CloudFirestoreDatabase();
 
-    public static void updateData(String terseResult, MotionData motionData) {
+    public static void updateData(String terseResult, MotionData motionData, Context context) {
         // Check the data and decide if there needs to be a delta reported and stored to the backend.
-        Log.d("PRAGYAN", terseResult);
-        backendCloudFirestore.saveData(motionData);
+        Log.d("dataPoint", terseResult);
+        backendCloudFirestore.saveData(motionData, context);
     }
 
 }
