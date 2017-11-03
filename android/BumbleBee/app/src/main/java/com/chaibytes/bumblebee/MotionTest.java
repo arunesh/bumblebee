@@ -1,6 +1,7 @@
 
 package com.chaibytes.bumblebee;
 
+import com.chaibytes.bumblebee.util.ServicesProvider;
 import com.samsung.android.sdk.SsdkUnsupportedException;
 import com.samsung.android.sdk.motion.Smotion;
 import com.samsung.android.sdk.motion.SmotionActivity;
@@ -120,6 +121,8 @@ public class MotionTest extends Activity {
             mBtn_start.setEnabled(true);
             mSpin.setClickable(true);
             mTv_timestamp.setVisibility(View.VISIBLE);
+
+            ServicesProvider.init(this);
         } else {
             MotionTest.displayData(0, "Not supported", "");
         }
@@ -262,7 +265,7 @@ public class MotionTest extends Activity {
                                 boolean isPedometerUpDownAvailable = mMotion
                                         .isFeatureEnabled(Smotion.TYPE_PEDOMETER_WITH_UPDOWN_STEP);
                                 mPedometer = new MotionPedometer(Looper.getMainLooper(), mMotion,
-                                        isPedometerUpDownAvailable, getBaseContext());
+                                        isPedometerUpDownAvailable);
                             }
                             mPedometer.initialize();
                         }

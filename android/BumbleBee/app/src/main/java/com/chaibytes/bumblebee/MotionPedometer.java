@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import java.text.DecimalFormat;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,8 +27,6 @@ class MotionPedometer {
             "Run Up Count", "Run Down Count", "Walk Up Count", "Walk Down Count"
     };
 
-    private Context mContext;
-
     private int mMode = MotionTest.MODE_PEDOMETER;
 
     private Timer mTimer;
@@ -38,10 +37,9 @@ class MotionPedometer {
 
     private boolean mIsUpDownAvailable;
 
-    MotionPedometer(Looper looper, Smotion motion, boolean isUpDownAvailable, Context context) {
+    MotionPedometer(Looper looper, Smotion motion, boolean isUpDownAvailable) {
         mPedometer = new SmotionPedometer(looper, motion);
         mIsUpDownAvailable = isUpDownAvailable;
-        mContext = context;
 
         initialize();
     }
@@ -163,7 +161,7 @@ class MotionPedometer {
         sb.append(sResults[4] + " : " + runCount + "\n");
         sb.append(sResults[5] + " : " + walkCount + "\n");
 
-        String terseResult = String.format("Cal(%2.2f), D(%2.2f), SP(%2.2f), TOT(%d), RC(%d), WC(%d)",  calorie, distance, speed, totalCount,
+        String terseResult = String.format(Locale.getDefault(), "Cal(%2.2f), D(%2.2f), SP(%2.2f), TOT(%d), RC(%d), WC(%d)",  calorie, distance, speed, totalCount,
                 runCount, walkCount);
 
         if (mIsUpDownAvailable) {
@@ -171,7 +169,7 @@ class MotionPedometer {
             sb.append(sResults[7] + " : " + runDownCount + "\n");
             sb.append(sResults[8] + " : " + walkUpCount + "\n");
             sb.append(sResults[9] + " : " + walkDownCount + "\n");
-            terseResult += String.format(" RUP(%d), RDN(%d), WUP(%d), WDN(%d)", runUpCount, runDownCount, walkUpCount, walkDownCount);
+            terseResult += String.format(Locale.getDefault(), " RUP(%d), RDN(%d), WUP(%d), WDN(%d)", runUpCount, runDownCount, walkUpCount, walkDownCount);
         }
         if (mMode == MotionTest.MODE_PEDOMETER_PERIODIC
                 || MotionTest.mTestMode == MotionTest.MODE_PEDOMETER_PERIODIC) {
@@ -184,7 +182,7 @@ class MotionPedometer {
             DecimalFormat df = new DecimalFormat("#.##");
             MotionData md = new MotionData(timestamp, Double.valueOf(df.format(calorie)),
                     Double.valueOf(df.format(distance)), speed, runCount, walkCount);
-            MotionDetector.updateData(terseResult, md, mContext);
+            MotionDetector.addData(terseResult, md);
 
             MotionTest.displayData(timestamp, str, sb.toString());
         }

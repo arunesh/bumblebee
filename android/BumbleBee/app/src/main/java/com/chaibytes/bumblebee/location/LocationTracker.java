@@ -1,11 +1,16 @@
 package com.chaibytes.bumblebee.location;
 
+import android.Manifest;
 import android.content.Context;
-import android.location.Location;
+import android.content.pm.PackageManager;
+import android.location.*;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.chaibytes.bumblebee.MotionTest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -16,47 +21,40 @@ import com.google.android.gms.location.LocationServices;
 
 public class LocationTracker implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
+
     private Context mContext;
     private GoogleApiClient mGoogleApiClient;
-    private LocationListener mLocationListener;
+
+    private static final int REQUEST_FINE_LOCATION = 0;
 
     private static final String TAG = LocationTracker.class.getSimpleName();
 
-    public LocationTracker(Context context, LocationListener listener) {
-        mContext = context;
-        mLocationListener = listener;
-    }
+    private boolean mIsConnected;
 
+    public LocationTracker(Context context) {
+        mContext = context;
+
+        checkPermissions();
+
+        initLocationAPIServices();
+    }
 
     private void initLocationAPIServices() {
         mGoogleApiClient = new GoogleApiClient.Builder(mContext)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
-                . addApi(LocationServices.API).build();
-
-        mGoogleApiClient.connect();
+                .addApi(LocationServices.API).build();
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult result) {
+    public void onConnectionFailed(@NonNull ConnectionResult result) {
         Log.i(TAG, "Connection Failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
     @Override
     public void onConnected(Bundle arg0) {
-        try {
-            // Get the location
-            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            if (location != null) {
-                Toast.makeText(mContext, location.getLatitude() + ", " + location.getLongitude(),
-                        Toast.LENGTH_LONG).show();
-                mLocationListener.getCurrentUserLocation(location);
-                mGoogleApiClient.disconnect();
-            }
-        } catch (SecurityException e) {
-            System.out.print(e);
-        }
-
+        mIsConnected = true;
+        Log.d(TAG, "Connected to Location Services");
     }
 
     @Override
@@ -64,7 +62,39 @@ public class LocationTracker implements GoogleApiClient.ConnectionCallbacks,
         mGoogleApiClient.connect();
     }
 
-    public void getCurrentLocation() {
-        initLocationAPIServices();
+    private void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions();
+        }
+    }
+
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions((MotionTest) mContext, new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
+                                        REQUEST_FINE_LOCATION);
+    }
+
+    public Location getLastLocation() {
+        if (mIsConnected) {
+            try {
+                // Get the location
+                Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                if (location != null) {
+                    Log.d(TAG, "Location: " + location.getLatitude() + "; " + location.getLongitude());
+                    return location;
+                }
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public void connectToLocationServicesAPI() {
+        mGoogleApiClient.connect();
+    }
+
+    public void disconnectFromLocationServicesAPI() {
+        mGoogleApiClient.disconnect();
     }
 }

@@ -7,7 +7,7 @@ import java.text.DateFormat;
  */
 
 public class MotionData {
-    private long timeStamp;
+    long timeStamp;
     private double calorie;
     private double distance;
     private double speed;
@@ -16,8 +16,28 @@ public class MotionData {
 
     private String dateFormatted;
 
+    public double getCalorie() {
+        return calorie;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public long getRunCount() {
+        return runCount;
+    }
+
+    public long getWalkCount() {
+        return walkCount;
+    }
+
     public MotionData(long timeStamp, double calorie, double distance, double speed, long runCount,
-               long walkCount) {
+                      long walkCount) {
 
         this.timeStamp = timeStamp;
         dateFormatted = DateFormat.getDateTimeInstance().format(timeStamp);
