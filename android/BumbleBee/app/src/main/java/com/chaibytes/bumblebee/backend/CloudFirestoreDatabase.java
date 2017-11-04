@@ -1,5 +1,6 @@
 package com.chaibytes.bumblebee.backend;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -10,6 +11,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -19,9 +23,23 @@ import java.util.Date;
 
 public class CloudFirestoreDatabase implements Backend {
     private static final String TAG = CloudFirestoreDatabase.class.getSimpleName();
+    private static final String FILE_PREFIX = "bumblebee-dump.txt_";
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String START_LOCATION = "start_location";
+
+    private FileOutputStream fileOutputStream;
+    private Context context;
+
+    public CloudFirestoreDatabase(Context context) {
+        this.context = context;
+        String filename =  FILE_PREFIX + new Date().toString();
+        try {
+            fileOutputStream = context.openFileOutput(filename, Context.MODE_WORLD_READABLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void saveLocationData(final UserLocation locationType, String tripName) {
@@ -42,8 +60,31 @@ public class CloudFirestoreDatabase implements Backend {
                 });
     }
 
+    private void saveMotionDataToFile(MotionData motionData) {
+        try {
+            fileOutputStream.write(motionData.toString().getBytes());
+        } catch (IOException e) {
+            Log.e(TAG, "Exception saving to file: " + e);
+        }
+    }
+
+    // TODO: Call this !
+    private void closeMotionDataFile() {
+        try {
+            fileOutputStream.close();
+        } catch (IOException e) {
+            Log.e(TAG, "Exception closing to file: " + e);
+        }
+    }
+
+    @Override
+    public void shutdown() {
+        closeMotionDataFile();
+    }
+
     @Override
     public void saveNewTripData(MotionData motionData, String newTripName) {
+        saveMotionDataToFile(motionData);
         db.collection("users").document(getDate())
                 .collection(newTripName).document(Long.toString(motionData.getTimeStamp()))
                 .set(motionData)
@@ -63,6 +104,7 @@ public class CloudFirestoreDatabase implements Backend {
 
     @Override
     public void updateTripData(MotionData motionData, String currentTripName) {
+        saveMotionDataToFile(motionData);
         db.collection("users").document(getDate())
                 .collection(currentTripName).document(Long.toString(motionData.getTimeStamp()))
                 .set(motionData, SetOptions.merge())

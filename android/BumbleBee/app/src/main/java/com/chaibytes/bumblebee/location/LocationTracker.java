@@ -1,6 +1,7 @@
 package com.chaibytes.bumblebee.location;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.*;
@@ -30,6 +31,11 @@ public class LocationTracker implements GoogleApiClient.ConnectionCallbacks,
     private static final String TAG = LocationTracker.class.getSimpleName();
 
     private boolean mIsConnected;
+    private LocationCallback locationCallback;
+
+    public interface LocationCallback {
+        void onLocationReady();
+    }
 
     public LocationTracker(Context context) {
         mContext = context;
@@ -37,6 +43,10 @@ public class LocationTracker implements GoogleApiClient.ConnectionCallbacks,
         checkPermissions();
 
         initLocationAPIServices();
+    }
+
+    public void setLocationCallback(LocationCallback locationCallback) {
+        this.locationCallback = locationCallback;
     }
 
     private void initLocationAPIServices() {
@@ -70,7 +80,7 @@ public class LocationTracker implements GoogleApiClient.ConnectionCallbacks,
     }
 
     private void requestPermissions() {
-        ActivityCompat.requestPermissions((MotionTest) mContext, new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
+        ActivityCompat.requestPermissions((Activity) mContext, new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
                                         REQUEST_FINE_LOCATION);
     }
 

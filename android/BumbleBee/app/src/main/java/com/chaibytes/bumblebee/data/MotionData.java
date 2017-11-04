@@ -1,6 +1,8 @@
 package com.chaibytes.bumblebee.data;
 
 import java.text.DateFormat;
+import java.util.Formatter;
+import java.util.Locale;
 
 /**
  * Data for user's Motion
@@ -15,6 +17,8 @@ public class MotionData {
     private long walkCount;
 
     private String dateFormatted;
+
+    private UserLocation userLocation;
 
     public double getCalorie() {
         return calorie;
@@ -48,6 +52,14 @@ public class MotionData {
         this.walkCount = walkCount;
     }
 
+    public UserLocation getUserLocation() {
+        return userLocation;
+    }
+
+    public void setUserLocation(UserLocation userLocation) {
+        this.userLocation = userLocation;
+    }
+
     public long getTimeStamp() {
         return timeStamp;
     }
@@ -56,4 +68,14 @@ public class MotionData {
         return dateFormatted;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        // Send all output to the Appendable object sb
+        Formatter formatter = new Formatter(sb, Locale.US);
+
+        return formatter.format("%d, %f, %f, %f, %f, %f, %d, %d\n", timeStamp,
+                userLocation.getmLatitude(), userLocation.getmLongitude(), calorie,
+                distance, speed, runCount, walkCount).toString();
+    }
 }

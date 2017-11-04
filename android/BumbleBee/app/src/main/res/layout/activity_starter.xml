@@ -4,6 +4,7 @@
         xmlns:map="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
+        android:id="@+id/main_rel_layout"
         android:layout_height="match_parent">
 
         <fragment
@@ -11,8 +12,9 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/header_cover_image"
             tools:context="com.chaibytes.bumblebee.MainActivity"
-            map:cameraZoom="10" />
+            map:cameraZoom="14" />
 
         <ImageView
             android:id="@+id/header_cover_image"
@@ -90,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:text="Pragyan Mishra"
+                android:text="Nancy Morgan"
                 android:textColor="#fff"
                 android:textSize="24sp"
                 android:textStyle="bold" />

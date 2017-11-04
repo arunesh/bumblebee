@@ -1,24 +1,28 @@
-
 package com.chaibytes.bumblebee;
-
-import com.chaibytes.bumblebee.data.MotionData;
-import com.chaibytes.bumblebee.detector.MotionDetector;
-import com.chaibytes.bumblebee.location.LocationTracker;
-import com.samsung.android.sdk.motion.Smotion;
-import com.samsung.android.sdk.motion.SmotionPedometer;
-import com.samsung.android.sdk.motion.SmotionPedometer.Info;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
+
+import com.chaibytes.bumblebee.data.MotionData;
+import com.chaibytes.bumblebee.detector.MotionDetector;
+import com.samsung.android.sdk.motion.Smotion;
+import com.samsung.android.sdk.motion.SmotionPedometer;
 
 import java.text.DecimalFormat;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-class MotionPedometer {
+import static com.chaibytes.bumblebee.MainActivity.TAG;
+
+/**
+ * Created by arunesh on 11/4/17.
+ */
+
+public class PedometerTracker {
 
     private SmotionPedometer mPedometer = null;
 
@@ -32,20 +36,28 @@ class MotionPedometer {
     private Timer mTimer;
 
     private SmotionPedometer.Info mInfo;
+    private PedometerCallback callback;
 
-    private long mInterval = 10000;
+    private long mInterval = 2000;
 
     private boolean mIsUpDownAvailable;
+    private Context context;
+    private MotionDetector motionDetector;
 
-    public interface pedometerCallback {
-        void onDataAvailable();
+    public interface PedometerCallback {
+        void onDataAvailable(MotionData motionData);
     }
 
-    MotionPedometer(Looper looper, Smotion motion, boolean isUpDownAvailable) {
+    PedometerTracker(Context context, Looper looper, Smotion motion, boolean isUpDownAvailable) {
+        this.context = context;
+        motionDetector = new MotionDetector(context);
         mPedometer = new SmotionPedometer(looper, motion);
         mIsUpDownAvailable = isUpDownAvailable;
-
         initialize();
+    }
+
+    void setCallback(PedometerCallback callback) {
+        this.callback = callback;
     }
 
     void start(int mode) {
@@ -69,7 +81,7 @@ class MotionPedometer {
     private void startTimer() {
         if (mTimer == null) {
             mTimer = new Timer();
-            mTimer.schedule(new MyTimer(), 0, mInterval);
+            mTimer.schedule(new PedometerTracker.MyTimer(), 0, mInterval);
         }
     }
 
@@ -96,7 +108,11 @@ class MotionPedometer {
                 || MotionTest.mTestMode == MotionTest.MODE_PEDOMETER_PERIODIC) {
             sb.append("Interval : ");
         }
-        MotionTest.displayData(0, status, sb.toString());
+        Log.i(TAG, "Pedometer ready: " + sb.toString());
+    }
+
+    void cleanup() {
+        motionDetector.cleanup();
     }
 
     private String getStatus(int status) {
@@ -135,7 +151,7 @@ class MotionPedometer {
     private SmotionPedometer.ChangeListener changeListener = new SmotionPedometer.ChangeListener() {
 
         @Override
-        public void onChanged(Info info) {
+        public void onChanged(SmotionPedometer.Info info) {
             // TODO Auto-generated method stub
             if (mMode == MotionTest.MODE_PEDOMETER) {
                 displayData(info);
@@ -143,7 +159,7 @@ class MotionPedometer {
         }
     };
 
-    private void displayData(Info info) {
+    private void displayData(SmotionPedometer.Info info) {
         // TODO Auto-generated method stub
         long timestamp = System.currentTimeMillis();
         StringBuffer sb = new StringBuffer();
@@ -186,9 +202,11 @@ class MotionPedometer {
             DecimalFormat df = new DecimalFormat("#.##");
             MotionData md = new MotionData(timestamp, Double.valueOf(df.format(calorie)),
                     Double.valueOf(df.format(distance)), speed, runCount, walkCount);
-           // MotionDetector.addData(terseResult, md);
+            motionDetector.addData(terseResult, md);
 
-            MotionTest.displayData(timestamp, str, sb.toString());
+            if (callback != null) {
+                callback.onDataAvailable(md);
+            }
         }
     }
 
@@ -208,7 +226,7 @@ class MotionPedometer {
         public void handleMessage(android.os.Message msg) {
             // TODO Auto-generated method stub
             if (mInfo != null) {
-                MotionTest.playSound();
+                // MotionTest.playSound();
                 displayData(mInfo);
             }
         }

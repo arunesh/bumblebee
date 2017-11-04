@@ -18,4 +18,6 @@ public interface Backend {
 
     // Save location data
     void saveLocationData(UserLocation locationData, String tripName);
+
+    void shutdown();
 }
