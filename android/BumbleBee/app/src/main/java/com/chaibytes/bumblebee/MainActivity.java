@@ -34,18 +34,34 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.samsung.android.sdk.SsdkUnsupportedException;
 import com.samsung.android.sdk.motion.Smotion;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import lecho.lib.hellocharts.gesture.ContainerScrollType;
+import lecho.lib.hellocharts.gesture.ZoomType;
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.Line;
+import lecho.lib.hellocharts.model.LineChartData;
+import lecho.lib.hellocharts.model.PointValue;
+import lecho.lib.hellocharts.model.Viewport;
+import lecho.lib.hellocharts.view.LineChartView;
+
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, PedometerTracker.PedometerCallback, LocationTracker.LocationCallback {
     public static final String TAG = "BumbleBee";
     private GoogleMap googleMap;
     private PedometerTracker pedometerTracker;
     private Smotion mMotion;
     private RelativeLayout mainRelativeLayout;
+    private LineChartView lineChartView;
+    private ArrayList<Integer> chartData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starter);
         mainRelativeLayout = (RelativeLayout) findViewById(R.id.main_rel_layout);
+        lineChartView = (LineChartView) findViewById(R.id.chart);
+        setupLineChatView();
         View decorView = getWindow().getDecorView();
 
         // Hide the status bar.
@@ -137,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (pedometerTracker == null) {
             boolean isPedometerUpDownAvailable = mMotion
                     .isFeatureEnabled(Smotion.TYPE_PEDOMETER_WITH_UPDOWN_STEP);
-            pedometerTracker = new PedometerTracker(Looper.getMainLooper(), mMotion,
+            pedometerTracker = new PedometerTracker(this, Looper.getMainLooper(), mMotion,
                     isPedometerUpDownAvailable);
             pedometerTracker.setCallback(this);
         }
@@ -148,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onDataAvailable(MotionData motionData) {
         showCurrentLocation();
+        addPointToChart(motionData);
     }
 
     private void showSnackBar(String message) {
@@ -173,6 +190,51 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .position(latLng).icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromVectorDrawable(this,
                         R.drawable.ic_directions_walk_5dp))));
 
+    }
+
+    private void setupLineChatView() {
+        chartData = new ArrayList<>();
+        lineChartView.setInteractive(true /* isInteractive */);
+        lineChartView.setZoomType(ZoomType.HORIZONTAL);
+        lineChartView.setContainerScrollEnabled(true /* isEnabled */,
+                ContainerScrollType.HORIZONTAL);
+    }
+
+    private void addPointToChart(MotionData motionData) {
+        chartData.add((int)(motionData.getSpeed() * 10));
+
+        List<PointValue> values = new ArrayList<PointValue>();
+        int index = 0;
+        for (int data : chartData) {
+            values.add(new PointValue(index, data));
+            index ++;
+        }
+
+        //In most cased you can call data model methods in builder-pattern-like manner.
+        Line line = new Line(values).setColor(0xFF00BFFF).setCubic(true);
+        line.setHasPoints(false);
+        line.setStrokeWidth(2);
+        List<Line> lines = new ArrayList<Line>();
+        lines.add(line);
+
+        LineChartData data = new LineChartData();
+        data.setLines(lines);
+        lineChartView.setLineChartData(data);
+        lineChartView.setViewportCalculationEnabled(false);
+        resetViewport(values.size());
+    }
+
+    private void resetViewport(int maxItems) {
+        int left = Math.max(maxItems - 30, 0);
+        int right = Math.max(maxItems, 30);
+        // Reset viewport height range to (0,100)
+        final Viewport v = new Viewport(lineChartView.getMaximumViewport());
+        v.bottom = -5;
+        v.top = 105;
+        v.left = left;
+        v.right = right;
+        lineChartView.setMaximumViewport(v);
+        lineChartView.setCurrentViewport(v);
     }
 
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {

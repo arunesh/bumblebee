@@ -1,6 +1,7 @@
 package com.chaibytes.bumblebee.backend;
 
 import android.content.Context;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -24,21 +25,56 @@ import java.util.Date;
 public class CloudFirestoreDatabase implements Backend {
     private static final String TAG = CloudFirestoreDatabase.class.getSimpleName();
     private static final String FILE_PREFIX = "bumblebee-dump.txt_";
+    private static final String FILE_PATH = "bumblebee";
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String START_LOCATION = "start_location";
 
+    private File myExternalFile;
     private FileOutputStream fileOutputStream;
     private Context context;
 
     public CloudFirestoreDatabase(Context context) {
         this.context = context;
-        String filename =  FILE_PREFIX + new Date().toString();
-        try {
-            fileOutputStream = context.openFileOutput(filename, Context.MODE_WORLD_READABLE);
-        } catch (Exception e) {
-            e.printStackTrace();
+        String filename = createFileName();
+        if (!isExternalStorageAvailable() || isExternalStorageReadOnly()) {
+            Log.e(TAG, "Unable to save to external directory.");
+        } else {
+            createExternalFile(FILE_PATH, filename);
+            Log.e(TAG, "Attempting to create file: " + filename);
+            try {
+                fileOutputStream = new FileOutputStream(myExternalFile);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e(TAG, "FILE CREATION FAILED.");
+            }
         }
+    }
+
+    private String createFileName() {
+        String dateString = new Date().toString().replace(' ', '_')
+                .replace(':', '_');
+        return FILE_PREFIX + dateString;
+    }
+
+    private static boolean isExternalStorageReadOnly() {
+        String extStorageState = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(extStorageState)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean isExternalStorageAvailable() {
+        String extStorageState = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(extStorageState)) {
+            return true;
+        }
+        return false;
+    }
+
+    public void createExternalFile(String filepath, String filename) {
+        myExternalFile = new File(context.getExternalFilesDir(filepath), filename);
     }
 
     @Override
@@ -61,6 +97,9 @@ public class CloudFirestoreDatabase implements Backend {
     }
 
     private void saveMotionDataToFile(MotionData motionData) {
+        if (fileOutputStream == null) {
+            return;
+        }
         try {
             fileOutputStream.write(motionData.toString().getBytes());
         } catch (IOException e) {
@@ -70,6 +109,9 @@ public class CloudFirestoreDatabase implements Backend {
 
     // TODO: Call this !
     private void closeMotionDataFile() {
+        if (fileOutputStream == null) {
+            return;
+        }
         try {
             fileOutputStream.close();
         } catch (IOException e) {

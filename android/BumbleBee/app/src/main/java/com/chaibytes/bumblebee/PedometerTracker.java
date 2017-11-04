@@ -38,7 +38,7 @@ public class PedometerTracker {
     private SmotionPedometer.Info mInfo;
     private PedometerCallback callback;
 
-    private long mInterval = 2000;
+    private long mInterval = 1000;
 
     private boolean mIsUpDownAvailable;
     private Context context;

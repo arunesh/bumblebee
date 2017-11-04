@@ -9,6 +9,9 @@ import java.util.Locale;
  */
 
 public class MotionData {
+    private static final String WALK_STATE = "WALK";
+    private static final String RUN_STATE = "RUN";
+    private static final String NONE_STATE = "STAND";
     long timeStamp;
     private double calorie;
     private double distance;
@@ -19,6 +22,7 @@ public class MotionData {
     private String dateFormatted;
 
     private UserLocation userLocation;
+    private String motionState = NONE_STATE;
 
     public double getCalorie() {
         return calorie;
@@ -68,14 +72,30 @@ public class MotionData {
         return dateFormatted;
     }
 
+    public String getMotionState() {
+        return motionState;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         // Send all output to the Appendable object sb
         Formatter formatter = new Formatter(sb, Locale.US);
 
-        return formatter.format("%d, %f, %f, %f, %f, %f, %d, %d\n", timeStamp,
+        return formatter.format("%d, %f, %f, %f, %f, %f, %d, %d, %s\n", timeStamp,
                 userLocation.getmLatitude(), userLocation.getmLongitude(), calorie,
-                distance, speed, runCount, walkCount).toString();
+                distance, speed, runCount, walkCount, motionState).toString();
+    }
+
+    public void computeDiff(MotionData prevMotionData) {
+        boolean isWalk = getWalkCount() > prevMotionData.getWalkCount();
+        boolean isRun = getRunCount() > prevMotionData.getRunCount();
+        if (isRun) {
+            motionState = RUN_STATE;
+        } else if (isWalk) {
+            motionState = WALK_STATE;
+        } else {
+            motionState = NONE_STATE;
+        }
     }
 }

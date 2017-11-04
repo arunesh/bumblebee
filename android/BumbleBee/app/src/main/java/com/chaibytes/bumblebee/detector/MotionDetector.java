@@ -25,6 +25,8 @@ public class MotionDetector {
     private int iNum = 0;
     private long prevTimeStamp = 0L;
 
+    private MotionData prevMotionData;
+
     //private static final long MIN_DURATION_MS = 15000L * 60L; // 15 mins in ms
 
     private Context context;
@@ -35,6 +37,7 @@ public class MotionDetector {
     }
 
     public void addData(String terseResult, MotionData motionData) {
+
         // Check the data and decide if there needs to be a delta reported and stored to the backend.
         Log.d("dataPoint", terseResult);
 
@@ -54,10 +57,15 @@ public class MotionDetector {
 
             // Add a new MotionData object
             backend.saveNewTripData(motionData, tripName);
+
         } else {
             // Same activity
+            if (prevMotionData != null) {
+                motionData.computeDiff(prevMotionData);
+            }
             backend.updateTripData(motionData, tripName);
         }
+        prevMotionData = motionData;
     }
 
     private static UserLocation getCurrentLocation() {
