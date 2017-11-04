@@ -1,5 +1,6 @@
 package com.chaibytes.bumblebee;
 
+import android.app.ActionBar;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
@@ -22,12 +23,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starter);
+        View decorView = getWindow().getDecorView();
+// Hide the status bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+// Remember that you should never show the action bar if the
+// status bar is hidden, so hide that too if necessary.
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) actionBar.hide();
+/*
+
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getDecorView()
                     .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
+*/
 
         // Get the SupportMapFragment and register for the callback
         // when the map is ready for use.
