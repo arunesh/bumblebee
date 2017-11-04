@@ -1,7 +1,7 @@
 
 package com.chaibytes.bumblebee;
 
-import com.chaibytes.bumblebee.util.ServicesProvider;
+import com.chaibytes.bumblebee.util.ServicesProviderSingleton;
 import com.samsung.android.sdk.SsdkUnsupportedException;
 import com.samsung.android.sdk.motion.Smotion;
 import com.samsung.android.sdk.motion.SmotionActivity;
@@ -122,7 +122,8 @@ public class MotionTest extends Activity {
             mSpin.setClickable(true);
             mTv_timestamp.setVisibility(View.VISIBLE);
 
-            ServicesProvider.init(this);
+            ServicesProviderSingleton.init(this);
+            ServicesProviderSingleton.getInstance().startLocationServices();
         } else {
             MotionTest.displayData(0, "Not supported", "");
         }
@@ -132,6 +133,8 @@ public class MotionTest extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         stopMotionTest();
+
+        ServicesProviderSingleton.getInstance().stopLocationServices();
     }
 
     public boolean initialize() {

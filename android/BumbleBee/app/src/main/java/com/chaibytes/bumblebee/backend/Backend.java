@@ -1,8 +1,7 @@
 package com.chaibytes.bumblebee.backend;
 
-import android.location.Location;
-
 import com.chaibytes.bumblebee.data.MotionData;
+import com.chaibytes.bumblebee.data.UserLocation;
 
 /**
  * Interfaces with the Backend
@@ -18,5 +17,5 @@ public interface Backend {
 
 
     // Save location data
-    void saveLocationData(Location locationData, String tripName);
+    void saveLocationData(UserLocation locationData, String tripName);
 }

@@ -6,7 +6,8 @@ import android.util.Log;
 import com.chaibytes.bumblebee.backend.Backend;
 import com.chaibytes.bumblebee.backend.CloudFirestoreDatabase;
 import com.chaibytes.bumblebee.data.MotionData;
-import com.chaibytes.bumblebee.util.ServicesProvider;
+import com.chaibytes.bumblebee.data.UserLocation;
+import com.chaibytes.bumblebee.util.ServicesProviderSingleton;
 
 /**
  * Listens when there is an update in Motion and saves differential
@@ -29,9 +30,13 @@ public class MotionDetector {
         Log.d("dataPoint", terseResult);
 
         if (!isSameInterval(motionData.getTimeStamp())) {
-            Location location = ServicesProvider.getInstance().getLocationTracker().getLastLocation();
+            Location location = ServicesProviderSingleton.getInstance().getLocationTracker().getLastLocation();
             if (location != null) {
-                backend.saveLocationData(location, tripName);
+                // Get the UserLocation object to save
+                UserLocation userLocation = new UserLocation(location.getLatitude(),
+                                                            location.getLongitude(),
+                                                            location.getTime());
+                backend.saveLocationData(userLocation, tripName);
             }
 
             // Add a new MotionData object

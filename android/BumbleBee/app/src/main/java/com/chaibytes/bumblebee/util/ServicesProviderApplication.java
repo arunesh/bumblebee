@@ -11,19 +11,19 @@ import com.chaibytes.bumblebee.location.LocationTracker;
  * Singleton Class that initializes and starts/stops services such as LocationTracker.
  */
 
-public class ServicesProvider implements Application.ActivityLifecycleCallbacks {
+public class ServicesProviderApplication extends Application implements Application.ActivityLifecycleCallbacks {
 
-    private static ServicesProvider mInstance = null;
+    private static ServicesProviderApplication mInstance = null;
     private LocationTracker mLocationTracker = null;
     private static Context mContext = null;
 
-    private ServicesProvider() {
+    private ServicesProviderApplication() {
         initLocationServices();
     }
 
-    public static synchronized ServicesProvider getInstance() {
+    public static synchronized ServicesProviderApplication getInstance() {
         if (mInstance == null) {
-            mInstance = new ServicesProvider();
+            mInstance = new ServicesProviderApplication();
         }
 
         return mInstance;
@@ -50,7 +50,7 @@ public class ServicesProvider implements Application.ActivityLifecycleCallbacks 
 
     @Override
     public void onActivityResumed(Activity activity) {
-
+        startLocationServices();
     }
 
     @Override

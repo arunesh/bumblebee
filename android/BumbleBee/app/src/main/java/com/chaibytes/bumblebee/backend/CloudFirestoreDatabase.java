@@ -1,10 +1,10 @@
 package com.chaibytes.bumblebee.backend;
 
-import android.location.Location;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.chaibytes.bumblebee.data.MotionData;
+import com.chaibytes.bumblebee.data.UserLocation;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,7 +24,7 @@ public class CloudFirestoreDatabase implements Backend {
     private static final String START_LOCATION = "start_location";
 
     @Override
-    public void saveLocationData(final Location locationType, String tripName) {
+    public void saveLocationData(final UserLocation locationType, String tripName) {
         db.collection("users").document(getDate())
                 .collection(tripName).document(START_LOCATION)
                 .set(locationType)
