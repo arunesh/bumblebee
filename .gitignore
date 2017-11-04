@@ -10,3 +10,4 @@ android/BumbleBee/.gradle/
 android/BumbleBee/build/
 android/BumbleBee/gradle/
 android/BumbleBee/local.properties
+android/.gradle/
