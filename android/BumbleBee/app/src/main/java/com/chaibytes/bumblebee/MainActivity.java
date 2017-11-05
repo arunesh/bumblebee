@@ -230,6 +230,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
         googleMap.clear();
+        addFriends();
         for (UserLocation userLocation : locationHistory) {
             addGraymarker(new LatLng(userLocation.getmLatitude(), userLocation.getmLongitude()));
         }
@@ -263,6 +264,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Marker marker = googleMap.addMarker(new MarkerOptions()
                 .position(latlng).icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromVectorDrawable(this,
                         R.drawable.ic_lens_black_24dp))));
+    }
+
+    private void addPersonMarker(LatLng latLng) {
+         Marker marker = googleMap.addMarker(new MarkerOptions()
+                .position(latLng).icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromVectorDrawable(this,
+                        R.drawable.ic_person_black_24dp))));
     }
 
     private void setupLineChatView() {
@@ -307,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Reset viewport height range to (0,100)
         final Viewport v = new Viewport(lineChartView.getMaximumViewport());
         v.bottom = -5;
-        v.top = maxX + 15;
+        v.top = Math.max(maxX, 100) + 15;
         v.left = left;
         v.right = right;
         lineChartView.setMaximumViewport(v);
@@ -358,6 +365,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onItemSelected(ItemPickerDialogFragment fragment, ItemPickerDialogFragment.Item item, int index) {
         String selectedValue = item.getStringValue();
         if (pedState == PED_STARTED) {
+            locationHistory.clear();
+            googleMap.clear();
             pedometerTracker.addOfflineData(new MotionDataLoader(this, selectedValue).readAll());
         }
     }
@@ -374,5 +383,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             chartLabelTv.setText(MotionData.NONE_STATE);
             chartLabelTv.setTextColor(Color.GRAY);
         }
+    }
+
+    private void addFriends() {
+        LatLng friend1 = new LatLng(37.402292, -122.049298);
+        addPersonMarker(friend1);
+
+        LatLng friend2 = new LatLng(37.397291, -122.047818);
+        addPersonMarker(friend2);
+        LatLng friend3 = new LatLng(37.401716, -122.051816);
+        addPersonMarker(friend3);
     }
 }
