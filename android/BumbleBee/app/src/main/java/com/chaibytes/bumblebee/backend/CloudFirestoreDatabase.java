@@ -25,7 +25,7 @@ import java.util.Date;
 public class CloudFirestoreDatabase implements Backend {
     private static final String TAG = CloudFirestoreDatabase.class.getSimpleName();
     private static final String FILE_PREFIX = "bumblebee-dump.txt_";
-    private static final String FILE_PATH = "bumblebee";
+    public static final String FILE_PATH = "bumblebee";
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String START_LOCATION = "start_location";

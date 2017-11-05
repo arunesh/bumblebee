@@ -44,6 +44,24 @@ public class MotionData {
         return walkCount;
     }
 
+    public static MotionData fromString(String str) {
+        String[] fields = str.split(",");
+        if (fields.length < 9) return null;
+        long timestamp = Long.valueOf(fields[0].trim());
+        double latitude = Double.valueOf(fields[1].trim());
+        double longitude = Double.valueOf(fields[2].trim());
+        double calorie = Double.valueOf(fields[3].trim());
+        double distance = Double.valueOf(fields[4].trim());
+        double speed = Double.valueOf(fields[5].trim());
+        long runCount = Long.valueOf(fields[6].trim());
+        long walkCount = Long.valueOf(fields[7].trim());
+        String motionState = fields[8].trim();
+        MotionData motionData = new MotionData(timestamp, calorie, distance, speed, runCount, walkCount);
+        motionData.setUserLocation(new UserLocation(latitude, longitude, timestamp));
+        motionData.setMotionState(motionState);
+        return motionData;
+    }
+
     public MotionData(long timeStamp, double calorie, double distance, double speed, long runCount,
                       long walkCount) {
 
@@ -66,6 +84,10 @@ public class MotionData {
 
     public long getTimeStamp() {
         return timeStamp;
+    }
+
+    public void setMotionState(String state) {
+        motionState = state;
     }
 
     public String getDateFormatted() {

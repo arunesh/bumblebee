@@ -12,6 +12,7 @@ import com.samsung.android.sdk.motion.Smotion;
 import com.samsung.android.sdk.motion.SmotionPedometer;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -43,6 +44,7 @@ public class PedometerTracker {
     private boolean mIsUpDownAvailable;
     private Context context;
     private MotionDetector motionDetector;
+    private ArrayList<MotionData> offlineData;
 
     public interface PedometerCallback {
         void onDataAvailable(MotionData motionData);
@@ -53,6 +55,7 @@ public class PedometerTracker {
         motionDetector = new MotionDetector(context);
         mPedometer = new SmotionPedometer(looper, motion);
         mIsUpDownAvailable = isUpDownAvailable;
+        offlineData = new ArrayList<>();
         initialize();
     }
 
@@ -76,6 +79,10 @@ public class PedometerTracker {
             stopTimer();
         }
         initialize();
+    }
+
+    void addOfflineData(ArrayList<MotionData> dataList) {
+        offlineData.addAll(dataList);
     }
 
     private void startTimer() {
@@ -224,10 +231,20 @@ public class PedometerTracker {
     private final Handler handler = new Handler() {
         @Override
         public void handleMessage(android.os.Message msg) {
-            // TODO Auto-generated method stub
-            if (mInfo != null) {
-                // MotionTest.playSound();
-                displayData(mInfo);
+            if (!offlineData.isEmpty()) {
+                MotionData motionData = offlineData.remove(0);
+                if (callback != null) {
+                    Log.i(TAG, "Using offline data point : " + motionData.toString());
+                    callback.onDataAvailable(motionData);
+                } else {
+                    Log.i(TAG, "Dropping offline data point.");
+                }
+            } else {
+                // TODO Auto-generated method stub
+                if (mInfo != null) {
+                    // MotionTest.playSound();
+                    displayData(mInfo);
+                }
             }
         }
     };

@@ -16,6 +16,7 @@
     <string name="res_activity_realtime_periodic_interval">10</string>
     <string name="res_activity_realtime_periodic_interval_sec">sec</string>
     <string name="res_activity_batch_updateinfo">updateInfo</string>
+    <string name="title_file_picker">Pick a File</string>
 
     <string-array name="spinnerArray">
         <item> Call </item>
