@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.chaibytes.bumblebee.backend.MotionDataLoader;
 import com.chaibytes.bumblebee.data.MotionData;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ArrayList<Integer> chartData;
     private CircleImageView circleImageView;
     private ArrayList<UserLocation> locationHistory;
+    private TextView chartLabelTv;
     private int pedState = PED_UNINITIALIZED;
 
     @Override
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mainRelativeLayout = (RelativeLayout) findViewById(R.id.main_rel_layout);
         lineChartView = (LineChartView) findViewById(R.id.chart);
         circleImageView = (CircleImageView) findViewById(R.id.profile_image);
+        chartLabelTv = (TextView) findViewById(R.id.chart_label);
         setupLineChatView();
         View decorView = getWindow().getDecorView();
 
@@ -233,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng newLatLng = new LatLng(location.getmLatitude(), location.getmLongitude());
         moveMapTo(newLatLng);
         addGreenMarker(newLatLng);
+        locationHistory.add(location);
     }
 
     private void showCurrentLocation() {
@@ -271,6 +275,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void addPointToChart(MotionData motionData) {
         updateLocation(motionData.getUserLocation());
+        setChartLabel(motionData);
         chartData.add((int)(motionData.getSpeed() * 10));
 
         List<PointValue> values = new ArrayList<PointValue>();
@@ -354,6 +359,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         String selectedValue = item.getStringValue();
         if (pedState == PED_STARTED) {
             pedometerTracker.addOfflineData(new MotionDataLoader(this, selectedValue).readAll());
+        }
+    }
+
+    private void setChartLabel(MotionData motionData) {
+        String label = motionData.getMotionState();
+        if (label.equals(MotionData.WALK_STATE)) {
+            chartLabelTv.setText(MotionData.WALK_STATE);
+            chartLabelTv.setTextColor(0xFF00BFFF);
+        } else if (label.equals(MotionData.RUN_STATE)) {
+            chartLabelTv.setText(MotionData.RUN_STATE);
+            chartLabelTv.setTextColor(Color.RED);
+        } else {
+            chartLabelTv.setText(MotionData.NONE_STATE);
+            chartLabelTv.setTextColor(Color.GRAY);
         }
     }
 }

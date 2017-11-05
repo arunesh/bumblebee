@@ -9,9 +9,10 @@ import java.util.Locale;
  */
 
 public class MotionData {
-    private static final String WALK_STATE = "WALK";
-    private static final String RUN_STATE = "RUN";
-    private static final String NONE_STATE = "STAND";
+    public static final String WALK_STATE = "WALK";
+    public static final String RUN_STATE = "RUN";
+    public static final String NONE_STATE = "STAND";
+
     long timeStamp;
     private double calorie;
     private double distance;
