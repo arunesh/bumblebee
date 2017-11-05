@@ -1,7 +1,6 @@
 package com.chaibytes.bumblebee;
 
 import android.app.ActionBar;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -22,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chaibytes.bumblebee.backend.MotionDataLoader;
+import com.chaibytes.bumblebee.data.ChartData;
 import com.chaibytes.bumblebee.data.MotionData;
 import com.chaibytes.bumblebee.data.UserLocation;
 import com.chaibytes.bumblebee.location.LocationTracker;
@@ -41,11 +41,13 @@ import com.samsung.android.sdk.motion.Smotion;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import lecho.lib.hellocharts.gesture.ContainerScrollType;
 import lecho.lib.hellocharts.gesture.ZoomType;
-import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
@@ -70,6 +72,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private CircleImageView circleImageView;
     private ArrayList<UserLocation> locationHistory;
     private TextView chartLabelTv;
+    private ChartData chartPoints;
+    private int amplitude = 0;
+    private Timer mTimer;
+    private Random random;
     private int pedState = PED_UNINITIALIZED;
 
     @Override
@@ -77,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starter);
         locationHistory = new ArrayList<>();
+        chartPoints = new ChartData();
+        random = new Random(System.currentTimeMillis());
         mainRelativeLayout = (RelativeLayout) findViewById(R.id.main_rel_layout);
         lineChartView = (LineChartView) findViewById(R.id.chart);
         circleImageView = (CircleImageView) findViewById(R.id.profile_image);
@@ -160,6 +168,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void startPedometerTracker() {
         if (pedState == PED_STOPPED || pedState == PED_INITIALIZED) {
             pedometerTracker.start(MotionTest.MODE_PEDOMETER_PERIODIC);
+            chartPoints.clear();
+            startTimer();
             pedState = PED_STARTED;
         } else {
             Log.i(TAG, "Ignoring startPed() call. Ped not initialized or not stopped.");
@@ -169,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void stopPedometerTracker() {
         if (pedState == PED_STARTED) {
             pedometerTracker.stop();
+            stopTimer();
             pedState = PED_STOPPED;
         } else {
             Log.i(TAG, "Ignoring stopPed() call. Ped not started.");
@@ -207,7 +218,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onDataAvailable(MotionData motionData) {
         //showCurrentLocation();
-        addPointToChart(motionData);
+        // addPointToChart(motionData);
+        addAmpToChartData(motionData);
     }
 
     private void showSnackBar(String message) {
@@ -308,6 +320,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         resetViewport(max, values.size());
     }
 
+    private void addAmpToChartData(MotionData motionData) {
+        updateLocation(motionData.getUserLocation());
+        setChartLabel(motionData);
+        amplitude = (int)(motionData.getSpeed() * 10);
+        amplitude = Math.max(amplitude, 3);
+    }
+
+    private void updateUsingChartPoints() {
+        //In most cased you can call data model methods in builder-pattern-like manner.
+        Line line = new Line(chartPoints.getValues()).setColor(0xFF00BFFF).setCubic(true);
+        line.setHasPoints(false);
+        line.setStrokeWidth(2);
+        List<Line> lines = new ArrayList<Line>();
+        lines.add(line);
+
+        LineChartData data = new LineChartData();
+        data.setLines(lines);
+        lineChartView.setLineChartData(data);
+        lineChartView.setViewportCalculationEnabled(false);
+        resetViewport(chartPoints.getMax(), chartPoints.getSize());
+    }
+
     private void resetViewport(int maxX, int maxY) {
         int left = Math.max(maxY - 30, 0);
         int right = Math.max(maxY, 30);
@@ -392,5 +426,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         addPersonMarker(friend2, "Rohit Khan");
         LatLng friend3 = new LatLng(37.401716, -122.051816);
         addPersonMarker(friend3, "Margaret Britt");
+    }
+
+    private void startTimer() {
+        if (mTimer == null) {
+            mTimer = new Timer();
+            mTimer.schedule(new MyTimer(), 0, 250);
+        }
+    }
+
+    private void stopTimer() {
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
+        }
+    }
+
+ class MyTimer extends TimerTask {
+
+        @Override
+        public void run() {
+            if (amplitude > 0) {
+                chartPoints.add(random.nextInt(amplitude));
+                updateUsingChartPoints();
+            }
+        }
     }
 }
