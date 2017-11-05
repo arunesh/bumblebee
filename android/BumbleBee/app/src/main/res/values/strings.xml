@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BumbleBee</string>
+    <string name="app_name">Safely</string>
     <string name="title_activity_main">Smotion Test</string>
     <string name="res_layout">RelativeLayout</string>
     <string name="menu_setting1">Delete log files</string>

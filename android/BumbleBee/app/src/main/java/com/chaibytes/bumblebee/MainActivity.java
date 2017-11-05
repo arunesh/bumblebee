@@ -62,6 +62,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int PED_STARTED = 1002;
     private static final int PED_STOPPED = 1003;
 
+    private static final int STABLE_STATE = 2001;
+    private static final int ALERT_STATE = 2002;
+
     public static final String TAG = "BumbleBee";
     private GoogleMap googleMap;
     private PedometerTracker pedometerTracker;
@@ -72,10 +75,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private CircleImageView circleImageView;
     private ArrayList<UserLocation> locationHistory;
     private TextView chartLabelTv;
+    private TextView alertTv;
     private ChartData chartPoints;
     private int amplitude = 0;
+    private String lastMotionState;
     private Timer mTimer;
     private Random random;
+    private int userState = STABLE_STATE;
     private int pedState = PED_UNINITIALIZED;
 
     @Override
@@ -89,6 +95,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         lineChartView = (LineChartView) findViewById(R.id.chart);
         circleImageView = (CircleImageView) findViewById(R.id.profile_image);
         chartLabelTv = (TextView) findViewById(R.id.chart_label);
+        alertTv = (TextView) findViewById(R.id.alert_tv);
+        alertTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideAlert();
+            }
+        });
         setupLineChatView();
         View decorView = getWindow().getDecorView();
 
@@ -121,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideAlert();
                 showFilePicker();
             }
         });
@@ -151,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onStart() {
         super.onStart();
+        hideAlert();
         startPedometerTracker();
     }
 
@@ -348,7 +363,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Reset viewport height range to (0,100)
         final Viewport v = new Viewport(lineChartView.getMaximumViewport());
         v.bottom = -5;
-        v.top = Math.max(maxX, 100) + 15;
+        v.top = Math.max(maxX, 150) + 15;
         v.left = left;
         v.right = right;
         lineChartView.setMaximumViewport(v);
@@ -410,13 +425,34 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (label.equals(MotionData.WALK_STATE)) {
             chartLabelTv.setText(MotionData.WALK_STATE);
             chartLabelTv.setTextColor(0xFF00BFFF);
+            updateMotionState(MotionData.WALK_STATE);
         } else if (label.equals(MotionData.RUN_STATE)) {
             chartLabelTv.setText(MotionData.RUN_STATE);
             chartLabelTv.setTextColor(Color.RED);
+            updateMotionState(MotionData.RUN_STATE);
         } else {
             chartLabelTv.setText(MotionData.NONE_STATE);
             chartLabelTv.setTextColor(Color.GRAY);
+            updateMotionState(MotionData.NONE_STATE);
         }
+    }
+
+    private void updateMotionState(String motionState) {
+        lastMotionState = motionState;
+        if (motionState.equals(MotionData.RUN_STATE) && userState == STABLE_STATE) {
+            userState = ALERT_STATE;
+            showAlert();
+        }
+    }
+
+    private void showAlert() {
+        alertTv.setText("ALERT: Possible change in pattern detected ! Finding HELP nearby.");
+        alertTv.setVisibility(View.VISIBLE);
+    }
+
+    private void hideAlert() {
+        userState = STABLE_STATE;
+        alertTv.setVisibility(View.GONE);
     }
 
     private void addFriends() {
@@ -447,7 +483,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         public void run() {
             if (amplitude > 0) {
-                chartPoints.add(random.nextInt(amplitude));
+
+                int bias = 0;
+                double scale = 1.0;
+                if (lastMotionState.equals(MotionData.RUN_STATE)) {
+                    bias += 20;
+                    scale = 1.5;
+                }
+                chartPoints.add(random.nextInt((int) (amplitude * scale + bias)));
                 updateUsingChartPoints();
             }
         }
