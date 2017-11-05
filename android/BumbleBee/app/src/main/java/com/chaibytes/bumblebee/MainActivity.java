@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void moveMapTo(LatLng latLng) {
         // googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(-34, 151)));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
     private void startPedometerTracker() {
@@ -213,6 +213,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void updateLocation(UserLocation location) {
+        if (location == null) {
+            Log.i(TAG, "Attempt to update with null Location.");
+            return;
+        }
         if (!locationHistory.isEmpty()) {
             UserLocation lastLocation = locationHistory.get(locationHistory.size() - 1);
             if (lastLocation.getmLatitude() == location.getmLatitude() &&
@@ -222,12 +226,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return;
             }
         }
+        googleMap.clear();
         for (UserLocation userLocation : locationHistory) {
             addGraymarker(new LatLng(userLocation.getmLatitude(), userLocation.getmLongitude()));
         }
         LatLng newLatLng = new LatLng(location.getmLatitude(), location.getmLongitude());
-        addGreenMarker(newLatLng);
         moveMapTo(newLatLng);
+        addGreenMarker(newLatLng);
     }
 
     private void showCurrentLocation() {
