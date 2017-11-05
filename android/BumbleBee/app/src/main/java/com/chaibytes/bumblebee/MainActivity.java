@@ -266,8 +266,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         R.drawable.ic_lens_black_24dp))));
     }
 
-    private void addPersonMarker(LatLng latLng) {
-         Marker marker = googleMap.addMarker(new MarkerOptions()
+    private void addPersonMarker(LatLng latLng, String name) {
+         Marker marker = googleMap.addMarker(new MarkerOptions().title(name)
                 .position(latLng).icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromVectorDrawable(this,
                         R.drawable.ic_person_black_24dp))));
     }
@@ -387,11 +387,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void addFriends() {
         LatLng friend1 = new LatLng(37.402292, -122.049298);
-        addPersonMarker(friend1);
-
+        addPersonMarker(friend1, "Jason Brown");
         LatLng friend2 = new LatLng(37.397291, -122.047818);
-        addPersonMarker(friend2);
+        addPersonMarker(friend2, "Rohit Khan");
         LatLng friend3 = new LatLng(37.401716, -122.051816);
-        addPersonMarker(friend3);
+        addPersonMarker(friend3, "Margaret Britt");
     }
 }

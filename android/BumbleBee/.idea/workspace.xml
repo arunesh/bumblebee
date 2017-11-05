@@ -11,10 +11,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3dc57d9f-f980-45f3-8099-6ef0dbcd14fd" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_person_black_24dp.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/chaibytes/bumblebee/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/chaibytes/bumblebee/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_starter.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_starter.xml" />
     </list>
     <ignored path="BumbleBee.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -47,40 +44,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chaibytes/bumblebee/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="415">
-              <caret line="391" column="58" lean-forward="false" selection-start-line="391" selection-start-column="58" selection-end-line="391" selection-end-column="58" />
+            <state relative-caret-position="628">
+              <caret line="396" column="0" lean-forward="true" selection-start-line="396" selection-start-column="0" selection-end-line="396" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#4745#4895#0" expanded="true" />
                 <element signature="e#4894#4895#0" expanded="true" />
-                <element signature="e#11134#11146#0" expanded="true" />
-                <element signature="e#11624#11630#0" expanded="true" />
-                <element signature="e#13051#13052#0" expanded="true" />
-                <element signature="e#13088#13089#0" expanded="true" />
+                <element signature="e#11159#11171#0" expanded="true" />
+                <element signature="e#11649#11655#0" expanded="true" />
+                <element signature="e#13076#13077#0" expanded="true" />
+                <element signature="e#13113#13114#0" expanded="true" />
+                <element signature="e#13722#13764#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ic_person_black_24dp.xml" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_person_black_24dp.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="207">
-              <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="colors.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/colors.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="115">
-              <caret line="5" column="31" lean-forward="false" selection-start-line="5" selection-start-column="31" selection-end-line="5" selection-end-column="37" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -1927,8 +1905,8 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/chaibytes/bumblebee/data/MotionData.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable/ic_lens_black_24dp.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_starter.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/chaibytes/bumblebee/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable/ic_person_black_24dp.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/chaibytes/bumblebee/MainActivity.java" />
       </list>
     </option>
   </component>
@@ -2360,7 +2338,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1509859952410" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1509860182814" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -2408,7 +2386,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1509859952410" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1509860182814" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2591,7 +2569,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1509859952411" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1509860182815" />
       </method>
     </configuration>
     <list size="1">
@@ -3109,27 +3087,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chaibytes/bumblebee/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="415">
-          <caret line="391" column="58" lean-forward="false" selection-start-line="391" selection-start-column="58" selection-end-line="391" selection-end-column="58" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#4745#4895#0" expanded="true" />
-            <element signature="e#4894#4895#0" expanded="true" />
-            <element signature="e#11134#11146#0" expanded="true" />
-            <element signature="e#11624#11630#0" expanded="true" />
-            <element signature="e#13051#13052#0" expanded="true" />
-            <element signature="e#13088#13089#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_person_black_24dp.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="207">
           <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chaibytes/bumblebee/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="628">
+          <caret line="396" column="0" lean-forward="true" selection-start-line="396" selection-start-column="0" selection-end-line="396" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#4745#4895#0" expanded="true" />
+            <element signature="e#4894#4895#0" expanded="true" />
+            <element signature="e#11159#11171#0" expanded="true" />
+            <element signature="e#11649#11655#0" expanded="true" />
+            <element signature="e#13076#13077#0" expanded="true" />
+            <element signature="e#13113#13114#0" expanded="true" />
+            <element signature="e#13722#13764#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
