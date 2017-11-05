@@ -281,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void addGreenMarker(LatLng latLng) {
-        Marker marker = googleMap.addMarker(new MarkerOptions()
+        Marker marker = googleMap.addMarker(new MarkerOptions().title("Nancy Morgan")
                 .position(latLng).icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromVectorDrawable(this,
                         R.drawable.ic_directions_walk_5dp))));
 
